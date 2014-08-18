@@ -1,13 +1,16 @@
 #!/bin/bash
 
-usage (){
-  echo "Usage: pingtest.sh twitter.com"
+error(){
+  echo "$1"
   exit 1
+}
+
+usage (){
+  error "Usage: pingtest.sh twitter.com"
 }
 
 if [ $# -ne 1 ]; then
   usage
-  exit 1
 fi
 
 
@@ -15,9 +18,10 @@ fi
 BASE=$( cd $(dirname $0) ; pwd -P )
 source ${BASE}/bashsimplecurses-read-only/simple_curses.sh
 
+SCRIPTBASENAME=`basename $0`
 
 DOMAIN="$1"
-TMPFILE=tmppinggraphfile.tmp
+TMPFILE=`mktemp /tmp/${SCRIPTBASENAME}.XXXXXX` || error "Error openening temp file"
 ping -n "$DOMAIN" | awk -F '[ /]' '!/PING/{ sub(".*time=", "", $7); print $7; fflush() }' > $TMPFILE &
 #( ping -n $DOMAIN | sed -un 's/^.*time=\([[:digit:]]\+\).*$/\1/p' > $TMPFILE ) &
 PINGPID=$!
@@ -26,7 +30,7 @@ sleep 2 # Wait for some data
 
 
 cols=$(tput cols);
-rows=$(tput lines);
+rows=$(tput lines); let "rows -= 8";
 script="set terminal dumb ${cols} ${rows}; set yrange[0:1000]; plot 'FILE' with impulses title 'Ping (ms)';"
 #gnuplot -persist -e "${script/FILE/$TMPFILE}"
 
@@ -64,7 +68,7 @@ trap on_kill SIGINT SIGTERM
 
 
 main(){
-  TMPGRAPH=tmpgraph.tmp
+  TMPGRAPH=`mktemp /tmp/${SCRIPTBASENAME}.XXXXXX` || error "Error openening temp file"
   window "$DOMAIN Ping Graph"
   addsep
   gnuplot -persist -e "${script/FILE/$TMPFILE}" > "$TMPGRAPH"
