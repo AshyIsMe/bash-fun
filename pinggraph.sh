@@ -12,7 +12,9 @@ fi
 
 
 # simple_curses.sh from: https://code.google.com/p/bashsimplecurses/
-. `dirname $0`/bashsimplecurses-read-only/simple_curses.sh
+#. `dirname $0`/bashsimplecurses-read-only/simple_curses.sh
+BASE=$( cd $(dirname $0) ; pwd -P )
+source ${BASE}/bashsimplecurses-read-only/simple_curses.sh
 
 
 DOMAIN="$1"
