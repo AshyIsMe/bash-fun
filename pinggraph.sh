@@ -69,7 +69,7 @@ trap on_kill SIGINT SIGTERM
 
 main(){
   TMPGRAPH=`mktemp /tmp/${SCRIPTBASENAME}.XXXXXX` || error "Error openening temp file"
-  window "$DOMAIN Ping Graph"
+  window "$DOMAIN Ping Graph" "red"
   addsep
   gnuplot -persist -e "${script/FILE/$TMPFILE}" > "$TMPGRAPH"
   cat "$TMPGRAPH"
