@@ -18,8 +18,8 @@ source ${BASE}/bashsimplecurses-read-only/simple_curses.sh
 
 DOMAIN="$1"
 TMPFILE=tmppinggraphfile.tmp
-ping "$DOMAIN" | awk -F '[ /]' '!/PING/{ sub(".*time=", "", $7); print $7; fflush() }' > $TMPFILE &
-#( ping -n $DOMAIN | stdbuf -o 0 sed -n 's/^.*time=\([[:digit:]]\+\).*$/\1/p' > $TMPFILE ) &
+ping -n "$DOMAIN" | awk -F '[ /]' '!/PING/{ sub(".*time=", "", $7); print $7; fflush() }' > $TMPFILE &
+#( ping -n $DOMAIN | sed -un 's/^.*time=\([[:digit:]]\+\).*$/\1/p' > $TMPFILE ) &
 PINGPID=$!
 
 sleep 2 # Wait for some data
