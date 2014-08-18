@@ -18,13 +18,16 @@ source ${BASE}/bashsimplecurses-read-only/simple_curses.sh
 
 DOMAIN="$1"
 TMPFILE=tmppinggraphfile.tmp
-ping "$DOMAIN" | awk -F '[ /]' '!/PING/{ sub("time=", "", $7); print $7; fflush() }' > $TMPFILE &
+ping "$DOMAIN" | awk -F '[ /]' '!/PING/{ sub(".*time=", "", $7); print $7; fflush() }' > $TMPFILE &
+#( ping -n $DOMAIN | stdbuf -o 0 sed -n 's/^.*time=\([[:digit:]]\+\).*$/\1/p' > $TMPFILE ) &
 PINGPID=$!
 
 sleep 2 # Wait for some data
 
 
-script="set terminal dumb 80 40; set yrange[0:1000]; plot 'FILE' with impulses title 'Ping (ms)';"
+cols=$(tput cols);
+rows=$(tput lines);
+script="set terminal dumb ${cols} ${rows}; set yrange[0:1000]; plot 'FILE' with impulses title 'Ping (ms)';"
 #gnuplot -persist -e "${script/FILE/$TMPFILE}"
 
 #script="plot 'data-file.dat'"
