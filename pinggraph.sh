@@ -65,10 +65,6 @@ main(){
   addsep
   gnuplot -persist -e "${script/FILE/$TMPFILE}" > "$TMPGRAPH"
   cat "$TMPGRAPH"
-  #while read line; do
-    ##append "$line"
-    #echo "$line"
-  #done < "$TMPGRAPH"
   endwin
   rm $TMPGRAPH
 }
