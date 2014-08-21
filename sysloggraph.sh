@@ -26,7 +26,8 @@ script="set terminal dumb ${cols} ${rows}; "
 #Uncomment the next line and gnuplot will show the chart in a gui window
 #script="" 
 script="$script set xtics rotate;"
-script="$script plot 'FILE' using 1:xtic(2) with impulses title 'syslog messages per day';"
+#script="$script plot 'FILE' using 1:xtic(2) with impulses title 'syslog messages per day';"
+script="$script plot 'FILE' using 1 with impulses title 'syslog messages per day';"
 
 #script="plot 'data-file.dat'"
 script="${script/FILE/$TMPFILE}"
